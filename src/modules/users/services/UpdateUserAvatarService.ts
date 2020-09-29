@@ -1,19 +1,20 @@
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import path from 'path';
-import { getRepository } from 'typeorm';
 import fs from 'fs';
-import User from '../models/User';
-import uploadConfig from '../config/upload';
-import AppError from '../errors/AppError';
+import uploadConfig from '@config/upload';
+import AppError from '@shared/errors/AppError';
+import User from '@modules/users/infra/typeorm/entities/User';
 
 interface Request {
   user_id: string;
   fileName: string;
 }
 class UpdateUserAvatarService {
-  public async execute({ user_id, fileName }: Request): Promise<User> {
-    const userRepository = getRepository(User);
+  // eslint-disable-next-line prettier/prettier
+  constructor(private usersRepository: IUsersRepository) { }
 
-    const user = await userRepository.findOne(user_id);
+  public async execute({ user_id, fileName }: Request): Promise<User> {
+    const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
       throw new AppError('Only authenticated user can change avatar', 401);
@@ -31,7 +32,7 @@ class UpdateUserAvatarService {
 
     user.avatar = fileName;
 
-    await userRepository.save(user);
+    await this.usersRepository.save(user);
 
     return user;
   }
