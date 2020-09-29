@@ -4,14 +4,18 @@ import fs from 'fs';
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
+import { injectable, inject } from 'tsyringe';
 
 interface Request {
   user_id: string;
   fileName: string;
 }
+@injectable()
 class UpdateUserAvatarService {
-  // eslint-disable-next-line prettier/prettier
-  constructor(private usersRepository: IUsersRepository) { }
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) { }
 
   public async execute({ user_id, fileName }: Request): Promise<User> {
     const user = await this.usersRepository.findById(user_id);
