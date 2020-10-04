@@ -22,7 +22,7 @@ class CreateUserService {
   public async execute({ name, email, password }: Request): Promise<User> {
     const checkUserExists = await this.usersRepository.findByEmail(email);
     if (checkUserExists) {
-      throw new AppError('Email adrres already used.');
+      throw new AppError('Email address already used.');
     }
 
     const hasherdPassword = await this.hashProvider.generateHash(password);
