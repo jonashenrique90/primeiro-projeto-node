@@ -4,6 +4,8 @@ import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepo
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import UsersTokensRepository from '@modules/users/infra/typeorm/repositories/UsersTokensRepository';
 import IUsersTokensRepository from '@modules/users/repositories/IUsersTokensRepository';
+import NotificationRepository from '@modules/notifications/infra/typeorm/repositories/NotificationRepository';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 
 import { container } from 'tsyringe';
 import '@modules/users/providers';
@@ -22,4 +24,9 @@ container.registerSingleton<IUsersRepository>(
 container.registerSingleton<IUsersTokensRepository>(
   'UsersTokensRepository',
   UsersTokensRepository,
+);
+
+container.registerSingleton<INotificationsRepository>(
+  'NotificationsRepository',
+  NotificationRepository,
 );
