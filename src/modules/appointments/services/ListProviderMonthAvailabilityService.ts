@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { injectable, inject } from 'tsyringe';
-import { getDaysInMonth, getDate } from 'date-fns';
+import { getDaysInMonth, getDate, isAfter, endOfDay } from 'date-fns';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
 interface Request {
@@ -19,7 +19,7 @@ class ListProviderMonthAvailabilityService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
-  ) { }
+  ) {}
 
   public async execute({
     provider_id,
@@ -41,12 +41,14 @@ class ListProviderMonthAvailabilityService {
     );
 
     const availability = eachDayArray.map(day => {
-      const appintmentsInDay = appointments.filter(
+      const compareDate = endOfDay(new Date(year, month - 1, day));
+      const appontmentsInDay = appointments.filter(
         appointment => getDate(appointment.date) === day,
       );
       return {
         day,
-        available: appintmentsInDay.length < 10,
+        available:
+          isAfter(compareDate, new Date()) && appontmentsInDay.length < 10,
       };
     });
 
