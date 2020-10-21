@@ -29,6 +29,7 @@ export default class SESMailProvider implements IMailProvider {
     templateData,
   }: ISendMailDTO): Promise<void> {
     const { name, email } = mailConfig.defaults.from;
+
     await this.client.sendMail({
       from: {
         name: from?.name || name,
